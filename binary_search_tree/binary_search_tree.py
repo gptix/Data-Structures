@@ -16,21 +16,99 @@ class BSTNode:
         self.right = None
 
     # Insert the given value into the tree
-    def insert(self, value):
-        pass
-
+    def insert(self, target):
+#         print(f'Target: {target} -- current-node-value: {self.value}')
+        if self.value == target:
+#             print( "Already in the tree.")
+            return
+        
+        # should I look left, or right?
+        elif target < self.value:
+#             print("I should look left.")
+#             # I should look left.
+#             # is there already something there?
+            if not self.left:
+#                 print("Nothing to the left, so insert.")
+                self.left = BSTNode(target)
+#                 print(f"Added leaf {target}")
+            else:
+                if target > self.left.value:
+#                     print("I should insert, and not recurse.")
+                    new_node = BSTNode(target)
+                    new_node.left = self.left
+                    self.left = new_node
+#                     print(f"Inserted non-leaf {target}")
+                    
+#                 # I should recurse
+                else:  
+#                     print("I will recurse to the left.")
+                    self.left.insert(target)
+        else:
+#             print("I should look right.")
+            if not self.right:
+#                 print("I should add a new leaf to the right, and not recurse.") 
+                new_node = BSTNode(target)
+                new_node.right = self.right
+                self.right = new_node
+#                 print(f"Inserted non-leaf {target}")
+            else:
+                if target > self.right.value:
+#                     print("I should insert, and not recurse.")
+                    new_node = BSTNode(target)
+                    new_node.right = self.right
+                    self.right = new_node
+#                     print(f"Inserted non-leaf {target}")
+                else:
+#                     print("I will recurse to the right.")
+                    self.right.insert(target)
+                    
+                
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
-        pass
-
+        if self.value == target:
+            return True
+        if target < self.value:
+            if self.left:
+                return self.left.contains(target)
+            else:
+                return False
+        else: 
+            if self.right:
+                return self.right.contains(target)
+            else:
+                return False
+            
     # Return the maximum value found in the tree
     def get_max(self):
-        pass
-
+        vals = [self.value]
+        if self.left:
+            vals.append(self.left.get_max())
+        if self.right:
+            vals.append(self.right.get_max())
+        return max(vals)
+    
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        pass
+        return_node = BSTNode(fn(self.value))
+        if self.left: 
+            return_node.left = self.left.for_each(fn)
+        if self.right: 
+            return_node.right = self.right.for_each(fn)
+        return return_node
+                    
+# foo = BSTNode(10)
+# foo.insert(1)
+
+# foo.insert(20)
+
+# foo.insert(15)
+
+# def plus1(x):
+#     return x + 1
+
+# bar = foo.for_each(plus1)
+# bar
 
     # Part 2 -----------------------
 
